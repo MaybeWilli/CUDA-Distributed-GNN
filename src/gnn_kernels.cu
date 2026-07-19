@@ -14,9 +14,7 @@ __global__ void GnnKernels::forward_run(float* features, int* edges, int* offset
 {
     int warp = threadIdx.x / 32 + blockIdx.x * (blockDim.x / 32);
     int lane = threadIdx.x % 32;
-    int block = blockIdx.x;
     int stride = gridDim.x * (blockDim.x / 32);
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
 
     for (int v = warp; v < nodes; v += stride)
     {
@@ -73,9 +71,7 @@ __global__ void GnnKernels::prob_backprop(int* edges, int* offsets, float* outpu
 {
     int warp = threadIdx.x / 32 + blockIdx.x * (blockDim.x / 32);
     int lane = threadIdx.x % 32;
-    int block = blockIdx.x;
     int stride = gridDim.x * (blockDim.x / 32);
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
 
     for (int v = warp; v < nodes; v += stride)
     {
@@ -180,13 +176,10 @@ __global__ void GnnKernels::weight_backprop(int* edges, int* offsets, float* fea
 {
     int warp = threadIdx.x / 32 + blockIdx.x * (blockDim.x / 32);
     int lane = threadIdx.x % 32;
-    int block = blockIdx.x;
     int stride = gridDim.x * (blockDim.x / 32);
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
 
     for (int v = warp; v < nodes; v += stride)
     {
-        float local_gradient = 0;
         for (int edge = offsets[v]+lane; edge < offsets[v+1]; edge += 32)
         {
             int u = edges[edge];

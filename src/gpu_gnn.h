@@ -69,7 +69,6 @@ class GpuGnn
         void update_weights();
         void update_weights(vector<float>& projection_gradients, vector<float>& weight_gradients);
         void back_prop();
-        void get_results();
 
         void save_to_buffer();
         void clear_buffer();
